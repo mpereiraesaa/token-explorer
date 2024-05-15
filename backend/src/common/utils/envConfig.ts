@@ -6,8 +6,13 @@ dotenv.config();
 export const env = cleanEnv(process.env, {
   NODE_ENV: str({ devDefault: testOnly('test'), choices: ['development', 'production', 'test'] }),
   HOST: host({ devDefault: testOnly('localhost') }),
-  PORT: port({ devDefault: testOnly(3000) }),
+  PORT: port({ devDefault: testOnly(8080) }),
   CORS_ORIGIN: str({ devDefault: testOnly('http://localhost:3000') }),
   COMMON_RATE_LIMIT_MAX_REQUESTS: num({ devDefault: testOnly(1000) }),
   COMMON_RATE_LIMIT_WINDOW_MS: num({ devDefault: testOnly(1000) }),
+  JWT_SECRET: str({ devDefault: testOnly('JUMPER') }),
+  JWT_EXPIRATION: str({ devDefault: testOnly('1h') }),
+  DB_URI: str({ devDefault: testOnly('mongodb://root:example@mongo:27017') }),
+  DB_NAME: str({ devDefault: testOnly('TEST') }),
+  REDIS_URI: str({ devDefault: testOnly('redis://redis:6379') }),
 });

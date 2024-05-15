@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+      - mongo
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - HOST=localhost
+      - CORS_ORIGIN=http://localhost:*
+      - REDIS_URI=redis://redis:6379
+      - DB_URI=mongodb://root:example@mongo:27017
+      - DB_NAME=TEST
+      - COMMON_RATE_LIMIT_WINDOW_MS=1000
+      - COMMON_RATE_LIMIT_MAX_REQUESTS=203000
+      - JWT_SECRET=JUMPER
+      - JWT_EXPIRATION=1h
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+  
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+volumes:
+  mongo-data:
+
+networks:
+  app-network:
+    driver: bridge
