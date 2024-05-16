@@ -6,9 +6,9 @@ export class Account {
   @ObjectIdColumn()
   _id?: ObjectId;
 
-  @Column()
+  @Column({ type: 'string' })
   address?: string;
 
-  @Column()
+  @Column({ type: 'string' })
   chain?: string;
 }

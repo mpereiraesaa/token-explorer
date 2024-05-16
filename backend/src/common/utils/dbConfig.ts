@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 
 import { env } from '@/common/utils/envConfig';
+import { Account } from '@/entities/account';
 
 const isProduction = env.NODE_ENV === 'production';
 
@@ -10,7 +11,7 @@ export const AppDataSource = new DataSource({
   database: env.DB_NAME,
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  entities: [],
+  entities: [Account],
   synchronize: !isProduction, // Synchronize entities with the database schema (not recommended in production)
   logging: !isProduction,
 });

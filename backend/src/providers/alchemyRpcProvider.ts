@@ -21,7 +21,7 @@ interface AlchemyRpcResponse<T> {
 
 type AlchemyParams = [string] | [string, 'erc20', { pageKey?: string; maxCount?: number }];
 
-export class AlchemyRpcService implements ITokenBalancesProvider {
+export class AlchemyRpcProvider implements ITokenBalancesProvider {
   private rpcUrl: string;
   constructor(rpcUrl: string) {
     this.rpcUrl = rpcUrl;
@@ -37,7 +37,7 @@ export class AlchemyRpcService implements ITokenBalancesProvider {
     });
   }
   sendRequest<T>(method: string, params: AlchemyParams): Promise<T> {
-    const raw = AlchemyRpcService.buildRawRequest(method, params);
+    const raw = AlchemyRpcProvider.buildRawRequest(method, params);
     return request<T>(this.rpcUrl, {
       method: 'POST',
       body: raw,

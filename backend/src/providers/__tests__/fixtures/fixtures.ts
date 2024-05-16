@@ -15,6 +15,18 @@ export const ALCHEMY_TOKEN_BALANCE_RESPONSE = {
   },
 };
 
+export const ALCHEMY_TOKEN_BALANCE_RESPONSE_NO_PAGE_KEY = {
+  jsonrpc: '2.0',
+  id: 1,
+  result: {
+    address: SOME_ADDRESS,
+    tokenBalances: [
+      { contractAddress: '0xtoken1', tokenBalance: '100' },
+      { contractAddress: '0xtoken2', tokenBalance: '200' },
+    ],
+  },
+};
+
 export const ALCHEMY_SOME_CONTRACT_ADDRESS = '0x1234567890abcdef1234567890abcdef12345678';
 export const ALCHEMY_TOKEN_METADATA_RESPONSE = {
   jsonrpc: '2.0',
