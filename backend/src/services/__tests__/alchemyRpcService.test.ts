@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import * as testData from '@/common/services/__tests__/fixtures/fixtures';
-import { AlchemyRpcService } from '@/common/services/alchemyRpcService';
 import { request } from '@/common/utils/request';
+import * as testData from '@/services/__tests__/fixtures/fixtures';
+import { AlchemyRpcService } from '@/services/alchemyRpcService';
 
 vi.mock('@/common/utils/request', () => ({
   request: vi.fn(),

@@ -1,10 +1,6 @@
-import {
-  ITokenBalancesProvider,
-  TokenBalances,
-  TokenMetadataResponse,
-} from '@/common/interfaces/ITokenBalancesProvider';
 import { AlchemyRpcError } from '@/common/utils/errors';
 import { request } from '@/common/utils/request';
+import { ITokenBalancesProvider, TokenBalances, TokenMetadataResponse } from '@/interfaces/ITokenBalancesProvider';
 
 interface TokenBalance {
   contractAddress: string;

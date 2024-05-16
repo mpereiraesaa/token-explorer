@@ -1,3 +1,5 @@
+export const WELCOME_MESSAGE = 'Welcome to Jumper';
+
 export const CHAIN_RPC_URLS = {
   ethereum: 'https://eth-mainnet.g.alchemy.com/v2/RZGrjyHN23ikZBA82XMxEpuxB5jAQS39',
   arbitrum: 'https://arb-mainnet.g.alchemy.com/v2/O788zfcV1vRjBp_2hEGdhCgSZDqo7hHb',
