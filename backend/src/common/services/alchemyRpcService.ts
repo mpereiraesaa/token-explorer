@@ -1,11 +1,10 @@
-import fetch from 'node-fetch';
-
 import {
   ITokenBalancesProvider,
   TokenBalances,
   TokenMetadataResponse,
 } from '@/common/interfaces/ITokenBalancesProvider';
 import { AlchemyRpcError } from '@/common/utils/errors';
+import { request } from '@/common/utils/request';
 
 interface TokenBalance {
   contractAddress: string;
@@ -24,12 +23,14 @@ interface AlchemyRpcResponse<T> {
   result: T;
 }
 
-export class AlchemyRpcProvider implements ITokenBalancesProvider {
+type AlchemyParams = [string] | [string, 'erc20', { pageKey?: string; maxCount?: number }];
+
+export class AlchemyRpcService implements ITokenBalancesProvider {
   private rpcUrl: string;
   constructor(rpcUrl: string) {
     this.rpcUrl = rpcUrl;
   }
-  buildRawQuery(method: string, params: any) {
+  static buildRawRequest(method: string, params: AlchemyParams) {
     return JSON.stringify({
       jsonrpc: '2.0',
       method,
@@ -39,6 +40,13 @@ export class AlchemyRpcProvider implements ITokenBalancesProvider {
       params,
     });
   }
+  sendRequest<T>(method: string, params: AlchemyParams): Promise<T> {
+    const raw = AlchemyRpcService.buildRawRequest(method, params);
+    return request<T>(this.rpcUrl, {
+      method: 'POST',
+      body: raw,
+    });
+  }
   async getTokenBalances(
     address: string,
     pageKey: string | null = null,
@@ -46,17 +54,19 @@ export class AlchemyRpcProvider implements ITokenBalancesProvider {
   ): Promise<[TokenBalances, string]> {
     try {
       const options = { ...(pageKey && { pageKey }), maxCount };
-      const raw = this.buildRawQuery('alchemy_getTokenBalances', [address, 'erc20', options]);
-      const responseData = await fetch(this.rpcUrl, { method: 'POST', body: raw, redirect: 'follow' });
-      const jsonData: AlchemyRpcResponse<TokenBalancesResult> = await responseData.json();
+      const response = await this.sendRequest<AlchemyRpcResponse<TokenBalancesResult>>('alchemy_getTokenBalances', [
+        address,
+        'erc20',
+        options,
+      ]);
       const tokenBalances: TokenBalances = {};
-      if (jsonData.result === undefined) {
-        throw new AlchemyRpcError(`Invalid response: ${JSON.stringify(jsonData)}`);
+      if (response.result === undefined) {
+        throw new AlchemyRpcError(`Invalid response: ${JSON.stringify(response)}`);
       }
-      for (const balance of jsonData.result.tokenBalances) {
+      for (const balance of response.result.tokenBalances) {
         tokenBalances[balance.contractAddress] = BigInt(balance.tokenBalance);
       }
-      return [tokenBalances, jsonData.result.pageKey || ''];
+      return [tokenBalances, response.result.pageKey || ''];
     } catch (err) {
       if (err instanceof Error) {
         throw new AlchemyRpcError(`Unexpected error: ${err.message}`);
@@ -68,10 +78,10 @@ export class AlchemyRpcProvider implements ITokenBalancesProvider {
 
   async getTokenMetadata(contractAddress: string): Promise<TokenMetadataResponse> {
     try {
-      const raw = this.buildRawQuery('alchemy_getTokenMetadata', [contractAddress]);
-      const responseData = await fetch(this.rpcUrl, { method: 'POST', body: raw, redirect: 'follow' });
-      const jsonData: AlchemyRpcResponse<TokenMetadataResponse> = await responseData.json();
-      return jsonData.result;
+      const response = await this.sendRequest<AlchemyRpcResponse<TokenMetadataResponse>>('alchemy_getTokenMetadata', [
+        contractAddress,
+      ]);
+      return response.result;
     } catch (err) {
       if (err instanceof Error) {
         throw new AlchemyRpcError(`Unexpected error: ${err.message}`);
