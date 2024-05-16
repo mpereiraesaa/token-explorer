@@ -1,3 +1,4 @@
+import { DEFAULT_MAX_COUNT } from '@/common/utils/constants';
 import { AlchemyRpcError } from '@/common/utils/errors';
 import { request } from '@/common/utils/request';
 import { ITokenBalancesProvider, TokenBalances, TokenMetadataResponse } from '@/interfaces/ITokenBalancesProvider';
@@ -46,8 +47,8 @@ export class AlchemyRpcProvider implements ITokenBalancesProvider {
   async getTokenBalances(
     address: string,
     pageKey: string | null = null,
-    maxCount: number = 25
-  ): Promise<[TokenBalances, string]> {
+    maxCount: number = DEFAULT_MAX_COUNT
+  ): Promise<[TokenBalances[], string]> {
     try {
       const options = { ...(pageKey && { pageKey }), maxCount };
       const response = await this.sendRequest<AlchemyRpcResponse<TokenBalancesResult>>('alchemy_getTokenBalances', [
@@ -55,14 +56,14 @@ export class AlchemyRpcProvider implements ITokenBalancesProvider {
         'erc20',
         options,
       ]);
-      const tokenBalances: TokenBalances = {};
       if (response.result === undefined) {
         throw new AlchemyRpcError(`Invalid response: ${JSON.stringify(response)}`);
       }
-      for (const balance of response.result.tokenBalances) {
-        tokenBalances[balance.contractAddress] = BigInt(balance.tokenBalance);
-      }
-      return [tokenBalances, response.result.pageKey || ''];
+      const processedTokenBalances = response.result.tokenBalances.map((balance) => ({
+        tokenAddress: balance.contractAddress,
+        balance: BigInt(balance.tokenBalance),
+      }));
+      return [processedTokenBalances, response.result.pageKey || ''];
     } catch (err) {
       if (err instanceof Error) {
         throw new AlchemyRpcError(`Unexpected error: ${err.message}`);

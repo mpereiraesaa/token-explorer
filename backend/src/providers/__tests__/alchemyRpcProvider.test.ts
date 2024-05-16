@@ -29,10 +29,10 @@ describe('AlchemyRpcProvider', () => {
       );
 
       expect(alchemyRpcProvider.sendRequest).toHaveBeenCalledTimes(1);
-      expect(result).toEqual({
-        '0xtoken1': BigInt('100'),
-        '0xtoken2': BigInt('200'),
-      });
+      expect(result).toEqual([
+        { tokenAddress: '0xtoken1', balance: BigInt(100) },
+        { tokenAddress: '0xtoken2', balance: BigInt(200) },
+      ]);
       expect(pageKey).toEqual(testData.PAGE_KEY);
     });
 

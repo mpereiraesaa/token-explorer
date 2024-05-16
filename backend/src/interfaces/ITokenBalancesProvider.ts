@@ -5,9 +5,9 @@ export interface TokenMetadataResponse {
   logo: string;
 }
 
-export type TokenBalances = { [token: string]: bigint };
+export type TokenBalances = { tokenAddress: string; balance: bigint };
 
 export interface ITokenBalancesProvider {
-  getTokenBalances(address: string): Promise<[TokenBalances, string]>;
+  getTokenBalances(address: string): Promise<[TokenBalances[], string]>;
   getTokenMetadata(address: string): Promise<TokenMetadataResponse>;
 }

@@ -1,3 +1,5 @@
+export const DEFAULT_MAX_COUNT = 10;
+
 export const WELCOME_MESSAGE = 'Welcome to Jumper';
 
 export const SUPPORTED_CHAINS = ['ethereum', 'arbitrum', 'ethereum_sepolia'] as const;
