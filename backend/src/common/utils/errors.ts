@@ -1,5 +1,12 @@
 import { Response } from 'node-fetch';
 
+export class AuthError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthError';
+  }
+}
+
 export class AlchemyRpcError extends Error {
   constructor(message: string) {
     super(message);
