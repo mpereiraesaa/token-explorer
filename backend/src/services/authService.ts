@@ -12,14 +12,14 @@ export const generateJwt = (address: string): string => {
   return sign({ address }, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
 };
 
-export const registerUser = async (address: string, chainId: number): Promise<string> => {
+export const registerUser = async (address: string, chain: string): Promise<string> => {
   try {
     let user = await accountRepository.findOne({ where: { address } });
 
     if (!user) {
       user = new Account();
       user.address = address;
-      user.chain = chainId.toString();
+      user.chain = chain;
       await accountRepository.save(user);
     }
 
