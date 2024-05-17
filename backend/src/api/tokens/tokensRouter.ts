@@ -3,7 +3,12 @@ import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { ZodSchema } from 'zod';
 
-import { tokensRequestSchema, tokensResponseSchema } from '@/api/tokens/validation';
+import {
+  TokensRequestParams,
+  TokensRequestQuery,
+  tokensRequestSchema,
+  tokensResponseSchema,
+} from '@/api/tokens/validation';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { ResponseStatus, ServiceResponse, ServiceResponseObjectError } from '@/common/models/serviceResponse';
 import { SupportedChain } from '@/common/utils/constants';
@@ -23,22 +28,25 @@ type TokensRequestQuery = {
 
 export const tokensRegistry = new OpenAPIRegistry();
 
+const TokensRequestParamsSchema = tokensRegistry.register('TokensRequestParams', TokensRequestParams);
+const TokensRequestQuerySchema = tokensRegistry.register('TokensRequestQuery', TokensRequestQuery);
+
 export const tokensRouter: Router = (() => {
   const router = Router();
 
   tokensRegistry.registerPath({
     method: 'get',
-    path: '/:chain/:address/tokens',
+    path: '/{chain}/tokens/{address}',
     tags: ['Tokens'],
     request: {
-      params: tokensRequestSchema.shape.params,
-      query: tokensRequestSchema.shape.query,
+      params: TokensRequestParamsSchema,
+      query: TokensRequestQuerySchema,
     },
-    responses: createApiResponse(tokensResponseSchema, 'Success'),
+    responses: createApiResponse(tokensResponseSchema, 'Success', StatusCodes.OK),
   });
 
   router.get(
-    '/:chain/:address/tokens',
+    '/:chain/tokens/:address',
     validateRequest(tokensRequestSchema as ZodSchema),
     async (_req: Request, res: Response) => {
       const { chain, address } = _req.params as TokensRequestParams;

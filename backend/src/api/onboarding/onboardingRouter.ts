@@ -2,7 +2,11 @@ import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
-import { OnboardingRequestSchema, OnboardingResponseSchema } from '@/api/onboarding/validation';
+import {
+  OnboardingRequestBodySchema,
+  OnboardingRequestSchema,
+  OnboardingResponseSchema,
+} from '@/api/onboarding/validation';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { ResponseStatus, ServiceResponse, ServiceResponseObjectError } from '@/common/models/serviceResponse';
 import { WELCOME_MESSAGE } from '@/common/utils/constants';
@@ -32,7 +36,7 @@ export const onboardingRouter: Router = (() => {
     responses: createApiResponse(OnboardingResponseSchema, 'Onboarding successful', StatusCodes.OK),
   });
 
-  router.post('/onboarding', validateRequest(OnboardingRequestSchema), async (req: Request, res: Response) => {
+  router.post('/onboarding', validateRequest(OnboardingRequestBodySchema), async (req: Request, res: Response) => {
     try {
       const { address, chain, signature } = req.body;
       const isValidSignature = await verifySignature(address, WELCOME_MESSAGE, signature);
