@@ -22,7 +22,7 @@ export const onboardingRouter: Router = (() => {
 
   onboardingRegistry.registerPath({
     method: 'post',
-    path: '/onboarding',
+    path: '/api/v1/onboarding',
     tags: ['Onboarding'],
     request: {
       body: {

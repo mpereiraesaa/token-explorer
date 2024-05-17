@@ -36,7 +36,7 @@ export const tokensRouter: Router = (() => {
 
   tokensRegistry.registerPath({
     method: 'get',
-    path: '/{chain}/tokens/{address}',
+    path: '/api/v1/{chain}/tokens/{address}',
     tags: ['Tokens'],
     request: {
       params: TokensRequestParamsSchema,
@@ -57,7 +57,7 @@ export const tokensRouter: Router = (() => {
         const serviceResponse = new ServiceResponse(
           ResponseStatus.Success,
           'Tokens fetched successfully',
-          { success: true, tokens },
+          { tokens },
           StatusCodes.OK
         );
         handleServiceResponse(serviceResponse, res);

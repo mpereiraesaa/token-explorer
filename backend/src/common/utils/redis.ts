@@ -2,8 +2,9 @@ import { createClient } from 'redis';
 
 import { env } from '@/common/utils/envConfig';
 
-export const getRedisClient = () => {
+export const getRedisClient = async () => {
   const client = createClient({ url: env.REDIS_URI });
+  await client.connect();
 
   client.on('error', (err) => {
     console.error('Redis error:', err);
@@ -18,7 +19,7 @@ export const getCachedData = async <T>(
   fetch_fn: (...args: any[]) => Promise<T>,
   ...args: any[]
 ) => {
-  const client = getRedisClient();
+  const client = await getRedisClient();
   const cachedData = await client.get(cacheKey);
 
   if (cachedData) {

@@ -61,7 +61,7 @@ export class AlchemyRpcProvider implements ITokenBalancesProvider {
       }
       const processedTokenBalances = response.result.tokenBalances.map((balance) => ({
         tokenAddress: balance.contractAddress,
-        balance: BigInt(balance.tokenBalance),
+        balance: BigInt(balance.tokenBalance).toString(),
       }));
       return [processedTokenBalances, response.result.pageKey || ''];
     } catch (err) {
