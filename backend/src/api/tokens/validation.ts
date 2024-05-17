@@ -1,11 +1,16 @@
 import { z } from 'zod';
 
-import { SUPPORTED_CHAINS } from '@/common/utils/constants';
+import { ETHEREUM_ADDRESS_REGEX, SUPPORTED_CHAINS } from '@/common/utils/constants';
 
 export const tokensRequestSchema = z.object({
   query: z.object({
     maxCount: z.number().optional(),
-    pageKey: z.string().optional(),
+    pageKey: z
+      .string()
+      .optional()
+      .refine((val) => !val || ETHEREUM_ADDRESS_REGEX.test(val), {
+        message: 'pageKey must be a valid Ethereum address',
+      }),
   }),
   params: z.object({
     chain: z.enum(SUPPORTED_CHAINS),

@@ -1,5 +1,5 @@
 import { DEFAULT_MAX_COUNT } from '@/common/utils/constants';
-import { AlchemyRpcError } from '@/common/utils/errors';
+import { ErrorCode, HTTPError, TokenBalancesError, TokenMetadataError, UnknownError } from '@/common/utils/errors';
 import { request } from '@/common/utils/request';
 import { ITokenBalancesProvider, TokenBalances, TokenMetadataResponse } from '@/interfaces/ITokenBalancesProvider';
 
@@ -57,7 +57,7 @@ export class AlchemyRpcProvider implements ITokenBalancesProvider {
         options,
       ]);
       if (response.result === undefined) {
-        throw new AlchemyRpcError(`Invalid response: ${JSON.stringify(response)}`);
+        throw new TokenBalancesError(ErrorCode.TokenBalancesError, `Invalid response: ${JSON.stringify(response)}`);
       }
       const processedTokenBalances = response.result.tokenBalances.map((balance) => ({
         tokenAddress: balance.contractAddress,
@@ -65,10 +65,19 @@ export class AlchemyRpcProvider implements ITokenBalancesProvider {
       }));
       return [processedTokenBalances, response.result.pageKey || ''];
     } catch (err) {
+      if (err instanceof HTTPError) {
+        throw new TokenBalancesError(
+          ErrorCode.TokenBalancesError,
+          `Failed to fetch token balances. reason: ${err.message}`
+        );
+      }
       if (err instanceof Error) {
-        throw new AlchemyRpcError(`Unexpected error: ${err.message}`);
+        throw new TokenBalancesError(ErrorCode.TokenBalancesError, `Unexpected error: ${err.message}`);
       } else {
-        throw new AlchemyRpcError(`An unknown error occurred while fetching token balances for ${address}`);
+        throw new UnknownError(
+          ErrorCode.UnknownError,
+          `An unknown error occurred while fetching token balances for ${address}`
+        );
       }
     }
   }
@@ -80,10 +89,19 @@ export class AlchemyRpcProvider implements ITokenBalancesProvider {
       ]);
       return response.result;
     } catch (err) {
+      if (err instanceof HTTPError) {
+        throw new TokenMetadataError(
+          ErrorCode.TokenMetadataError,
+          `Failed to fetch token metadata. reason: ${err.message}`
+        );
+      }
       if (err instanceof Error) {
-        throw new AlchemyRpcError(`Unexpected error: ${err.message}`);
+        throw new TokenMetadataError(ErrorCode.TokenMetadataError, `Unexpected error: ${err.message}`);
       } else {
-        throw new AlchemyRpcError(`An unknown error occurred while fetching token metadata for ${contractAddress}`);
+        throw new UnknownError(
+          ErrorCode.UnknownError,
+          `An unknown error occurred while fetching token metadata for ${contractAddress}`
+        );
       }
     }
   }

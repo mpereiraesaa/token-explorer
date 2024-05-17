@@ -1,16 +1,61 @@
 import { Response } from 'node-fetch';
 
-export class AuthError extends Error {
-  constructor(message: string) {
+enum ErrorType {
+  ProviderError = 'ProviderError',
+  AuthError = 'AuthError',
+  TokenMetadataError = 'TokenServiceError',
+  TokenBalancesError = 'TokenBalancesError',
+  UnknownError = 'UnknownError',
+}
+
+export enum ErrorCode {
+  ProviderError = 1,
+  AuthError = 2,
+  TokenMetadataError = 3,
+  TokenBalancesError = 4,
+  UnknownError = 5,
+}
+
+export class BaseError extends Error {
+  code: ErrorCode;
+  htmlMessage?: string;
+
+  constructor(type: ErrorType, code: number, message: string) {
     super(message);
-    this.name = 'AuthError';
+    Object.setPrototypeOf(this, BaseError.prototype);
+
+    this.code = code;
+    this.name = type.toString();
   }
 }
 
-export class AlchemyRpcError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'AlchemyRpcError';
+export class UnknownError extends BaseError {
+  constructor(code: ErrorCode, message: string) {
+    super(ErrorType.UnknownError, code, message);
+  }
+}
+
+export class ProviderError extends BaseError {
+  constructor(code: ErrorCode, message: string) {
+    super(ErrorType.ProviderError, code, message);
+  }
+}
+
+export class TokenBalancesError extends BaseError {
+  constructor(code: ErrorCode, message: string) {
+    super(ErrorType.TokenBalancesError, code, message);
+  }
+}
+
+export class TokenMetadataError extends BaseError {
+  constructor(code: ErrorCode, message: string) {
+    super(ErrorType.TokenMetadataError, code, message);
+  }
+}
+
+export class AuthError extends BaseError {
+  constructor(code: ErrorCode, message: string) {
+    super(ErrorType.AuthError, code, message);
   }
 }
 

@@ -5,6 +5,10 @@ export enum ResponseStatus {
   Failed,
 }
 
+export type ServiceResponseObjectError = {
+  code: number;
+} | null;
+
 export class ServiceResponse<T = null> {
   success: boolean;
   message: string;

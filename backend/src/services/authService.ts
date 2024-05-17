@@ -1,7 +1,7 @@
 import { sign } from 'jsonwebtoken';
 
 import { env } from '@/common/utils/envConfig';
-import { AuthError } from '@/common/utils/errors';
+import { AuthError, ErrorCode, UnknownError } from '@/common/utils/errors';
 import { Account } from '@/entities/account';
 import { accountRepository } from '@/repositories/';
 
@@ -27,9 +27,9 @@ export const registerUser = async (address: string, chainId: number): Promise<st
     return jwt;
   } catch (err) {
     if (err instanceof Error) {
-      throw new AuthError(`Unexpected error: ${err.message}`);
+      throw new AuthError(ErrorCode.AuthError, `Unexpected error while onboarding: ${err.message}`);
     } else {
-      throw new AuthError(`An unknown error occurred while registering address ${address}`);
+      throw new UnknownError(ErrorCode.UnknownError, `An unknown error occurred while onboarding address ${address}`);
     }
   }
 };

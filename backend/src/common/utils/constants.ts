@@ -1,4 +1,8 @@
+export const ETHEREUM_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
+
 export const DEFAULT_MAX_COUNT = 10;
+
+export const DEFAULT_BALANCES_CACHE_TTL = 300; // 5 minutes
 
 export const WELCOME_MESSAGE = 'Welcome to Jumper';
 

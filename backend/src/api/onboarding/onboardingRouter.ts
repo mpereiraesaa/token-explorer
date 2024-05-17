@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import { OnboardingRequestSchema, OnboardingResponseSchema } from '@/api/onboarding/validation';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
-import { ResponseStatus, ServiceResponse } from '@/common/models/serviceResponse';
+import { ResponseStatus, ServiceResponse, ServiceResponseObjectError } from '@/common/models/serviceResponse';
 import { WELCOME_MESSAGE } from '@/common/utils/constants';
 import { AuthError } from '@/common/utils/errors';
 import { handleServiceResponse, validateRequest } from '@/common/utils/httpHandlers';
@@ -58,17 +58,17 @@ export const onboardingRouter: Router = (() => {
       handleServiceResponse(serviceResponse, res);
     } catch (err) {
       if (err instanceof AuthError) {
-        const serviceResponse = new ServiceResponse<null>(
+        const serviceResponse = new ServiceResponse<ServiceResponseObjectError>(
           ResponseStatus.Failed,
           err.message,
-          null,
+          { code: err.code },
           StatusCodes.UNAUTHORIZED
         );
         return handleServiceResponse(serviceResponse, res);
       } else {
         const serviceResponse = new ServiceResponse<null>(
           ResponseStatus.Failed,
-          'Unexpected error occurred',
+          err instanceof Error ? err.message : 'Unexpected error',
           null,
           StatusCodes.INTERNAL_SERVER_ERROR
         );
