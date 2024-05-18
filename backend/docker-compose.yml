@@ -14,7 +14,7 @@ services:
       - HOST=localhost
       - CORS_ORIGIN=http://localhost:3000
       - REDIS_URI=redis://redis:6379
-      - DB_URI=mongodb://root:example@mongo:27017
+      - DB_URI=mongodb://root:example@mongo:27017/TEST?authSource=admin
       - DB_NAME=TEST
       - COMMON_RATE_LIMIT_WINDOW_MS=1000
       - COMMON_RATE_LIMIT_MAX_REQUESTS=203000
@@ -37,13 +37,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-    volumes:
-      - mongo-data:/data/db
     networks:
       - app-network
-
-volumes:
-  mongo-data:
 
 networks:
   app-network:

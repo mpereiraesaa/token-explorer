@@ -24,7 +24,7 @@ export const getDataSource = async () => {
     await AppDataSource.initialize();
     return AppDataSource;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw new Error('Error during Data Source initialization.');
   }
 };
