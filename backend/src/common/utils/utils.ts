@@ -5,8 +5,7 @@ import { env } from '@/common/utils/envConfig';
 import { VerifySignatureFunc } from '@/interfaces/IWeb3Provider';
 
 export const verifySignature: VerifySignatureFunc = (address: string, message: string, signature: string): boolean => {
-  const messageHash = ethers.id(message);
-  return ethers.getAddress(address) === ethers.verifyMessage(messageHash, signature);
+  return ethers.getAddress(address) === ethers.verifyMessage(message, signature);
 };
 
 export const generateToken = (payload: object): string => {
