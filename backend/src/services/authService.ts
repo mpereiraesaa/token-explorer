@@ -1,9 +1,9 @@
 import { sign } from 'jsonwebtoken';
 
+import { getDataSource } from '@/common/utils/dbConfig';
 import { env } from '@/common/utils/envConfig';
 import { AuthError, ErrorCode, UnknownError } from '@/common/utils/errors';
 import { Account } from '@/entities/account';
-import { accountRepository } from '@/repositories/';
 
 const JWT_SECRET = env.JWT_SECRET;
 const JWT_EXPIRATION = env.JWT_EXPIRATION;
@@ -14,6 +14,8 @@ export const generateJwt = (address: string): string => {
 
 export const registerUser = async (address: string, chain: string): Promise<string> => {
   try {
+    const appDataSource = await getDataSource();
+    const accountRepository = appDataSource.getRepository(Account);
     let user = await accountRepository.findOne({ where: { address } });
 
     if (!user) {

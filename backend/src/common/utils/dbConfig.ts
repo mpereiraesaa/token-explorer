@@ -16,11 +16,11 @@ export const AppDataSource = new DataSource({
   logging: !isProduction,
 });
 
-export const initializeDataSource = async () => {
+export const getDataSource = async () => {
   try {
     await AppDataSource.initialize();
-    console.log('Data Source has been initialized!');
+    return AppDataSource;
   } catch (err) {
-    console.error('Error during Data Source initialization:', err);
+    throw new Error('Error during Data Source initialization.');
   }
 };

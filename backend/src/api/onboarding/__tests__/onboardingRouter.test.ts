@@ -1,16 +1,20 @@
 import { StatusCodes } from 'http-status-codes';
 import request from 'supertest';
+import { DataSource, Repository } from 'typeorm';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ServiceResponse } from '@/common/models/serviceResponse';
+import { getDataSource } from '@/common/utils/dbConfig';
 import { verifySignature } from '@/common/utils/utils';
-import { accountRepository } from '@/repositories';
+import { Account } from '@/entities/account';
 import { app } from '@/server';
 
-vi.mock('@/repositories');
 vi.mock('@/common/utils/utils');
+vi.mock('@/common/utils/dbConfig');
 
 describe('Onboarding API endpoints', () => {
+  let fakeDataSource: Partial<DataSource>;
+  let fakeAccountRepository: Partial<Repository<Account>>;
   const validAddress = '0x1234567890abcdef1234567890abcdef12345678';
   const invalidAddress = '0x12345';
   const validChain = 'ethereum';
@@ -20,12 +24,21 @@ describe('Onboarding API endpoints', () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
+
+    fakeAccountRepository = {
+      findOne: vi.fn(),
+      save: vi.fn() as any,
+    };
+
+    fakeDataSource = {
+      getRepository: vi.fn().mockReturnValue(fakeAccountRepository),
+    };
+
+    vi.mocked(getDataSource).mockResolvedValue(fakeDataSource as DataSource);
   });
 
   it('POST /onboarding - success', async () => {
     vi.mocked(verifySignature).mockResolvedValue(true);
-    vi.mocked(accountRepository.findOne).mockResolvedValue(null);
-    vi.mocked(accountRepository.save).mockResolvedValue({});
 
     const response = await request(app)
       .post('/api/v1/onboarding')
@@ -40,8 +53,6 @@ describe('Onboarding API endpoints', () => {
 
   it('POST /onboarding - invalid address', async () => {
     vi.mocked(verifySignature).mockResolvedValue(true);
-    vi.mocked(accountRepository.findOne).mockResolvedValue(null);
-    vi.mocked(accountRepository.save).mockResolvedValue({});
 
     const response = await request(app)
       .post('/api/v1/onboarding')
@@ -55,8 +66,6 @@ describe('Onboarding API endpoints', () => {
 
   it('POST /onboarding - invalid chain', async () => {
     vi.mocked(verifySignature).mockResolvedValue(true);
-    vi.mocked(accountRepository.findOne).mockResolvedValue(null);
-    vi.mocked(accountRepository.save).mockResolvedValue({});
 
     const response = await request(app)
       .post('/api/v1/onboarding')
@@ -85,7 +94,7 @@ describe('Onboarding API endpoints', () => {
   it('POST /onboarding - unexpected error', async () => {
     const errorMessage = 'DB fail.';
     vi.mocked(verifySignature).mockResolvedValue(true);
-    vi.mocked(accountRepository.findOne).mockRejectedValue(new Error(errorMessage));
+    vi.mocked(getDataSource).mockRejectedValue(new Error(errorMessage));
 
     const response = await request(app)
       .post('/api/v1/onboarding')
