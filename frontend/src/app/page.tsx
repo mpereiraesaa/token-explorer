@@ -1,10 +1,13 @@
-import { Box, Typography } from "@mui/material";
-import Image from "next/image";
+import { BackgroundGradient } from "./components/BackgroundGradient";
+import { List } from "@/app/components/List/List";
+import { Navbar } from "@/app/components/Navbar";
 
 export default function Home() {
   return (
-    <Box display="flex" justifyContent="center">
-      <Typography variant="h1">Welcome to Jumper challenge!</Typography>
-    </Box>
+    <>
+      <BackgroundGradient />
+      <Navbar />
+      <List />
+    </>
   );
 }
