@@ -12,7 +12,7 @@ services:
       - NODE_ENV=development
       - PORT=8080
       - HOST=localhost
-      - CORS_ORIGIN=http://localhost:*
+      - CORS_ORIGIN=http://localhost:3000
       - REDIS_URI=redis://redis:6379
       - DB_URI=mongodb://root:example@mongo:27017
       - DB_NAME=TEST
