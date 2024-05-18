@@ -1,7 +1,7 @@
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
-type NotificationLevel = 'error' | 'info' | 'warning' | 'success';
+export type NotificationLevel = 'error' | 'info' | 'warning' | 'success';
 
 export interface ErrorState {
   active: boolean;

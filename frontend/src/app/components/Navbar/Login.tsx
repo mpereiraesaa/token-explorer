@@ -1,29 +1,43 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { LoginButtonContainer } from '@/app/components/Navbar/';
 import { useOnboarding } from '@/app/hooks/useOnboarding';
 import { useAccount, useChainId, useSignMessage } from 'wagmi';
 import { Chain, WELCOME_MESSAGE } from '@/constants/constants';
-import { useErrorStore } from '@/app/stores/error';
+import { NotificationLevel, useErrorStore } from '@/app/stores/error';
 import { useOnboardingStore } from '@/app/stores/onboarding';
 
 export const LoginButton = () => {
   const [error, isPending, data, mutateAsync] = useOnboarding();
-  const { setAuthentication } = useOnboardingStore((state) => state);
+  const { setAuthentication, authenticated } = useOnboardingStore((state) => state);
   const { showNotification } = useErrorStore((state) => state);
   const { address } = useAccount();
   const chainId = useChainId();
   const { signMessageAsync } = useSignMessage();
 
+  const handleShowNotification = useCallback(
+    (title: string, subtitle: string, level: NotificationLevel) => {
+      showNotification(title, subtitle, level);
+    },
+    [showNotification]
+  );
+
+  const handleSetAuthentication = useCallback(
+    (success: boolean) => {
+      setAuthentication(success);
+    },
+    [setAuthentication]
+  );
+
   useEffect(() => {
     if (error) {
-      showNotification('Error', error.message, 'error');
+      handleShowNotification('Error', error.message, 'error');
     }
     if (data) {
-      setAuthentication(true);
-      showNotification('Success', 'Login successful', 'success');
+      handleSetAuthentication(true);
+      handleShowNotification('Success', 'Login successful', 'success');
     }
-  }, [error, isPending, data, showNotification, setAuthentication]);
+  }, [error, isPending, data, handleShowNotification, handleSetAuthentication]);
 
   const handleClick = async () => {
     const signature = await signMessageAsync({ message: WELCOME_MESSAGE });
@@ -36,8 +50,8 @@ export const LoginButton = () => {
   };
 
   return (
-    <LoginButtonContainer onClick={handleClick} size='medium'>
-      Login
+    <LoginButtonContainer disabled={isPending || authenticated} onClick={handleClick} size='medium'>
+      {authenticated ? 'Logged in' : 'Login'}
     </LoginButtonContainer>
   );
 };

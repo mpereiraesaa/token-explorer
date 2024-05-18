@@ -8,10 +8,20 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Typography } from "@mui/material";
-import { ListFooter, ListContainer as Container } from ".";
+import { ListFooter, ListContainer as Container, ListEmpty } from ".";
 
 export const List = () => {
     const rows: any[] = [];
+    const TableDataElements: JSX.Element[] = rows.map((row) => (
+        <TableRow key={row.name} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+            <TableCell component="th" scope="row">
+                {row.name}
+            </TableCell>
+            <TableCell align="right">{row.calories}</TableCell>
+            <TableCell align="right">{row.fat}</TableCell>
+        </TableRow>
+    ));
+
     return (
         <Container component='section'>
             <TableContainer component={Paper}>
@@ -38,25 +48,9 @@ export const List = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.length === 0 ? (
-                            <TableRow>
-                                <TableCell colSpan={3} align="center">
-                                    No data available
-                                </TableCell>
-                            </TableRow>
-                        ) : (
-                            rows.map((row) => (
-                                <TableRow key={row.name} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                                    <TableCell component="th" scope="row">
-                                        {row.name}
-                                    </TableCell>
-                                    <TableCell align="right">{row.calories}</TableCell>
-                                    <TableCell align="right">{row.fat}</TableCell>
-                                </TableRow>
-                            ))
-                        )}
+                        {rows.length === 0 ? (<ListEmpty />) : (TableDataElements)}
                     </TableBody>
-                        <ListFooter rows={rows}/>
+                    <ListFooter rows={rows}/>
                 </Table>
             </TableContainer>
         </Container>
