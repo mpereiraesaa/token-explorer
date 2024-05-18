@@ -16,7 +16,12 @@ export const LoginButtonContainer = styled(Button)(({ }) => ({
   border: '1px solid #e0e0e0',
   textTransform: 'none',
   marginRight: '10px',
+  transition: 'transform 0.2s',
   '&:hover': {
-    background: '#f5f5f5',
+    background: '#ffffff', 
+    transform: 'scale(1.1)',
+  },
+  '&:active': {
+    transform: 'scale(0.95)',
   },
 }));
