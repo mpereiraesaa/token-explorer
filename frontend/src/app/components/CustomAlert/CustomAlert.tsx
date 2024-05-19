@@ -1,6 +1,6 @@
 'use client';
 import { Alert, AlertTitle, Slide } from '@mui/material';
-import { SyntheticEvent } from 'react';
+import { SyntheticEvent, useEffect } from 'react';
 import { CustomAlertContainer } from '.';
 import { useErrorStore } from '@/app/stores/error';
 
@@ -18,6 +18,14 @@ export const CustomAlert = () => {
     event.stopPropagation();
     closeNotification();
   };
+
+  useEffect(() => {
+    if (active) {
+      setTimeout(() => {
+        closeNotification();
+      }, 5000);
+    }
+  }, [active, closeNotification]);
 
   return (
     <Slide

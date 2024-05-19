@@ -19,6 +19,7 @@ export const useErrorStore = createWithEqualityFn<ErrorState>(
     subtitle: '',
     level: 'info',
     showNotification: (title: string, subtitle: string, level: NotificationLevel) => {
+      console.log('show notification');
       set({
         active: true,
         title,
@@ -27,6 +28,7 @@ export const useErrorStore = createWithEqualityFn<ErrorState>(
       });
     },
     closeNotification: () => {
+      console.log('close notification');
       set({
         active: false,
       });

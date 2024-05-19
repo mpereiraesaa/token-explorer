@@ -2,26 +2,42 @@
 import { TableFooter, TableRow, TablePagination } from "@mui/material";
 
 interface ListFooterProps {
-  rowsLength: number;
   maxCount: number;
   page: number;
+  isNextButtonDisabled: boolean;
+  isPreviousButtonDisabled: boolean;
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => void;
   handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
 export const ListFooter = (props: ListFooterProps) => {
-    const { rowsLength, maxCount, page, handleChangePage, handleChangeRowsPerPage } = props;
+    const {
+      isNextButtonDisabled,
+      isPreviousButtonDisabled,
+      maxCount,
+      page,
+      handleChangePage,
+      handleChangeRowsPerPage
+    } = props;
 
     return (
         <TableFooter>
             <TableRow>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={[3, 5, 10, 25]}
                     colSpan={3}
-                    count={rowsLength}
+                    count={-1}
                     rowsPerPage={maxCount}
                     page={page}
                     slotProps={{
+                        actions: {
+                            nextButton: {
+                                disabled: isNextButtonDisabled,
+                            },
+                            previousButton: {
+                                disabled: isPreviousButtonDisabled,
+                            },
+                        },
                         select: {
                             inputProps: {
                                 "aria-label": "rows per page",
@@ -31,6 +47,7 @@ export const ListFooter = (props: ListFooterProps) => {
                     }}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
+                    labelDisplayedRows={() => ''} // disable label
                 />
             </TableRow>
         </TableFooter>

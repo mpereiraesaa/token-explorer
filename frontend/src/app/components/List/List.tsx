@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Toolbar from "@mui/material/Toolbar";
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
@@ -37,11 +37,14 @@ export const List = () => {
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setMaxCount(parseInt(event.target.value, 10));
         setCurrentPageIndex(0);
+        setPageKeys(['']);
     };
 
-    if (error) {
-      showNotification('Error', error.message, 'error');
-    }
+    useEffect(() => {
+        if (error) {
+            showNotification('Error', error.message, 'error');
+        }
+    }, [error, showNotification]);
 
     return (
         <Container component="section">
@@ -70,11 +73,12 @@ export const List = () => {
                     </TableHead>
                     <ListContent tokens={tokens} isLoading={isLoading} />
                     <ListFooter
-                        rowsLength={tokens.length}
                         maxCount={maxCount}
                         page={currentPageIndex}
                         handleChangePage={handleChangePage}
                         handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        isNextButtonDisabled={newPageKey === undefined}
+                        isPreviousButtonDisabled={currentPageIndex === 0}
                     />
                 </Table>
             </TableContainer>
