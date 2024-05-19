@@ -1,18 +1,39 @@
-# 🚀 Jumper challenge backend
+# 🚀 Backend
 
 ## 🛠️ Getting Started
 
-### Step 1: 🚀 Initial Setup
+Swagger OpenAPI documentation is available at [http://localhost:8080/api/v1](http://localhost:8080/api/v1).
 
-- Install dependencies: `npm install`
+### ⚙️ Environment Configuration
 
-### Step 2: ⚙️ Environment Configuration
+The environment variables are defined in the `env.template` sample file. The actual values are set within [docker-compose.yml](./backend/docker-compose.yml).
 
-- Create `.env`: Copy `.env.template` to `.env`
-- Update `.env`: Fill in necessary environment variables
+### Running the tests
 
-### Step 3: 🏃‍♂️ Running the Project
+1. **Install dependencies:**
+  ```bash
+  npm install
+  ```
 
-- Development Mode: `npm run dev`
-- Building: `npm run build`
-- Production Mode: Set `.env` to `NODE_ENV="production"` then `npm run build && npm run start`
+2. **Running tests:**
+  ```bash
+  npm run test
+  ```
+
+### 🏃‍♂️ Running the Project
+
+The backend relies on Redis and MongoDB services, which are launched using Docker Compose. So you must have docker and docker-compose installed and set in your computer.
+
+1. **Navigate to the backend directory:**
+
+    ```bash
+    cd backend
+    ```
+
+2. **Launch Docker Containers:**
+
+    ```bash
+    docker-compose up -d
+    ```
+
+This command will start the backend server along with Redis and MongoDB services in the host and port set in the environment variables.
