@@ -1,29 +1,50 @@
-'use client';
+"use client";
+import { useState } from "react";
 import Toolbar from "@mui/material/Toolbar";
 import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Typography } from "@mui/material";
-import { ListFooter, ListContainer as Container, ListEmpty } from ".";
+import { ListFooter, ListContainer as Container, ListContent } from ".";
+import { useTokensBalance } from "@/app/hooks/useTokensBalance";
+import { useErrorStore } from "@/app/stores/error";
 
 export const List = () => {
-    const rows: any[] = [];
-    const TableDataElements: JSX.Element[] = rows.map((row) => (
-        <TableRow key={row.name} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-            <TableCell component="th" scope="row">
-                {row.name}
-            </TableCell>
-            <TableCell align="right">{row.calories}</TableCell>
-            <TableCell align="right">{row.fat}</TableCell>
-        </TableRow>
-    ));
+    const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const [pageKeys, setPageKeys] = useState(['']); // no page key for first page
+    const [maxCount, setMaxCount] = useState(10);
+    const { showNotification } = useErrorStore((state) => state);
+
+    const pageKey = pageKeys[currentPageIndex];
+    const { tokens, pageKey: newPageKey, error, isLoading } = useTokensBalance(pageKey, maxCount);
+
+    const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+      if (newPage < currentPageIndex && currentPageIndex > 0) {
+        setCurrentPageIndex(currentPageIndex - 1);
+      } else {
+        const newPageKeys = [...pageKeys];
+        if (currentPageIndex === newPageKeys.length - 1) {
+          newPageKeys.push(newPageKey);
+        }
+        setPageKeys(newPageKeys);
+        setCurrentPageIndex(currentPageIndex + 1);
+      }
+    };
+
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setMaxCount(parseInt(event.target.value, 10));
+        setCurrentPageIndex(0);
+    };
+
+    if (error) {
+      showNotification('Error', error.message, 'error');
+    }
 
     return (
-        <Container component='section'>
+        <Container component="section">
             <TableContainer component={Paper}>
                 <Toolbar
                     sx={{
@@ -47,10 +68,14 @@ export const List = () => {
                             </TableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
-                        {rows.length === 0 ? (<ListEmpty />) : (TableDataElements)}
-                    </TableBody>
-                    <ListFooter rows={rows}/>
+                    <ListContent tokens={tokens} isLoading={isLoading} />
+                    <ListFooter
+                        rowsLength={tokens.length}
+                        maxCount={maxCount}
+                        page={currentPageIndex}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
                 </Table>
             </TableContainer>
         </Container>
