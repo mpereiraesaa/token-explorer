@@ -16,7 +16,7 @@ export const validateUser = async (jwt: string): Promise<void> => {
   try {
     const appDataSource = await getDataSource();
     const accountRepository = appDataSource.getRepository(Account);
-    const address = verify(jwt, JWT_SECRET) as string;
+    const { address } = verify(jwt, JWT_SECRET) as { address: string };
     const user = await accountRepository.findOne({ where: { address: address } });
     if (!user) {
       throw new Error('Invalid JWT');
