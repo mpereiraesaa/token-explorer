@@ -50,7 +50,7 @@ export class AlchemyRpcProvider implements ITokenBalancesProvider {
     maxCount: number = DEFAULT_MAX_COUNT
   ): Promise<[TokenBalances[], string]> {
     try {
-      const options = { ...(pageKey && { pageKey }), maxCount };
+      const options = { ...(pageKey && { pageKey }), maxCount: Number(maxCount) };
       const response = await this.sendRequest<AlchemyRpcResponse<TokenBalancesResult>>('alchemy_getTokenBalances', [
         address,
         'erc20',

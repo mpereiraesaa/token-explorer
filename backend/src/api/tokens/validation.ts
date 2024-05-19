@@ -6,7 +6,7 @@ import { ETHEREUM_ADDRESS_REGEX, SUPPORTED_CHAINS } from '@/common/utils/constan
 extendZodWithOpenApi(z);
 
 export const TokensRequestQuery = z.object({
-  maxCount: z.number().optional(),
+  maxCount: z.string().optional(),
   pageKey: z
     .string()
     .optional()
