@@ -2,6 +2,12 @@ import { z } from 'zod';
 
 import { ETHEREUM_ADDRESS_REGEX, SUPPORTED_CHAINS } from '@/common/utils/constants';
 
+export const ValidateQueryRequestSchema = z.object({
+  query: z.object({
+    jwt: z.string().min(1, 'JWT is required'),
+  }),
+});
+
 export const OnboardingRequestSchema = z.object({
   address: z.string().refine((val) => !val || ETHEREUM_ADDRESS_REGEX.test(val), {
     message: 'address must be a valid Ethereum address',
