@@ -5,6 +5,15 @@ import { ETHEREUM_ADDRESS_REGEX, SUPPORTED_CHAINS } from '@/common/utils/constan
 
 extendZodWithOpenApi(z);
 
+export const TokensResponseData = z.object({
+  name: z.string(),
+  symbol: z.string(),
+  decimals: z.number(),
+  logo: z.string(),
+  tokenAddress: z.string(),
+  balance: z.string(),
+});
+
 export const TokensRequestQuery = z.object({
   maxCount: z.string().optional(),
   pageKey: z
@@ -25,6 +34,6 @@ export const tokensRequestSchema = z.object({
   query: TokensRequestQuery,
 });
 
-export const tokensResponseSchema = z.object({
-  tokens: z.array(z.any()),
+export const tokensResponse = z.object({
+  tokens: z.array(TokensResponseData),
 });

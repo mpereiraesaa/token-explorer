@@ -7,7 +7,7 @@ import {
   TokensRequestParams,
   TokensRequestQuery,
   tokensRequestSchema,
-  tokensResponseSchema,
+  TokensResponseData,
 } from '@/api/tokens/validation';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { ResponseStatus, ServiceResponse, ServiceResponseObjectError } from '@/common/models/serviceResponse';
@@ -30,6 +30,7 @@ export const tokensRegistry = new OpenAPIRegistry();
 
 const TokensRequestParamsSchema = tokensRegistry.register('TokensRequestParams', TokensRequestParams);
 const TokensRequestQuerySchema = tokensRegistry.register('TokensRequestQuery', TokensRequestQuery);
+const TokensResponseDataSchema = tokensRegistry.register('TokensResponseData', TokensResponseData);
 
 export const tokensRouter: Router = (() => {
   const router = Router();
@@ -42,7 +43,7 @@ export const tokensRouter: Router = (() => {
       params: TokensRequestParamsSchema,
       query: TokensRequestQuerySchema,
     },
-    responses: createApiResponse(tokensResponseSchema, 'Success', StatusCodes.OK),
+    responses: createApiResponse(TokensResponseDataSchema, 'Success', StatusCodes.OK),
   });
 
   router.get(
