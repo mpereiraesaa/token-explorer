@@ -49,11 +49,11 @@ export const tokensRouter: Router = (() => {
       const { maxCount, pageKey } = _req.query as TokensRequestQuery;
 
       try {
-        const tokens = await getTokensForAddress(chain as SupportedChain, address, maxCount, pageKey);
+        const data = await getTokensForAddress(chain as SupportedChain, address, maxCount, pageKey);
         const serviceResponse = new ServiceResponse(
           ResponseStatus.Success,
           'Tokens fetched successfully',
-          { tokens },
+          data,
           StatusCodes.OK
         );
         handleServiceResponse(serviceResponse, res);

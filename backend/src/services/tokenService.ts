@@ -13,7 +13,7 @@ export const getTokensForAddress = async (
   try {
     const provider = new AlchemyRpcProvider(CHAIN_RPC_URLS[chain]);
 
-    const tokens = await getCachedData(
+    const [tokens, newPageKey] = await getCachedData(
       `token-balances-${address}-${chain}-${maxCount}-${pageKey}`,
       DEFAULT_BALANCES_CACHE_TTL,
       provider.getTokenBalances.bind(provider),
@@ -23,7 +23,7 @@ export const getTokensForAddress = async (
     );
 
     const tokenDataArray = await Promise.all(
-      tokens[0].map(async (tokenData) => {
+      tokens.map(async (tokenData) => {
         const metadata = await getCachedData<TokenMetadataResponse>(
           `token-metadata-${tokenData.tokenAddress}`,
           -1,
@@ -38,7 +38,7 @@ export const getTokensForAddress = async (
       })
     );
 
-    return tokenDataArray;
+    return { tokens: tokenDataArray, ...(newPageKey && { pageKey: newPageKey }) };
   } catch (error) {
     if (error instanceof BaseError) {
       throw error;

@@ -36,4 +36,5 @@ export const tokensRequestSchema = z.object({
 
 export const TokensResponse = z.object({
   tokens: z.array(TokensResponseData),
+  pageKey: z.string().optional(),
 });
