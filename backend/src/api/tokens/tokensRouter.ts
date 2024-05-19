@@ -3,12 +3,7 @@ import { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { ZodSchema } from 'zod';
 
-import {
-  TokensRequestParams,
-  TokensRequestQuery,
-  tokensRequestSchema,
-  TokensResponseData,
-} from '@/api/tokens/validation';
+import { TokensRequestParams, TokensRequestQuery, tokensRequestSchema, TokensResponse } from '@/api/tokens/validation';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { ResponseStatus, ServiceResponse, ServiceResponseObjectError } from '@/common/models/serviceResponse';
 import { SupportedChain } from '@/common/utils/constants';
@@ -30,7 +25,7 @@ export const tokensRegistry = new OpenAPIRegistry();
 
 const TokensRequestParamsSchema = tokensRegistry.register('TokensRequestParams', TokensRequestParams);
 const TokensRequestQuerySchema = tokensRegistry.register('TokensRequestQuery', TokensRequestQuery);
-const TokensResponseDataSchema = tokensRegistry.register('TokensResponseData', TokensResponseData);
+const TokensResponseSchema = tokensRegistry.register('TokensResponse', TokensResponse);
 
 export const tokensRouter: Router = (() => {
   const router = Router();
@@ -43,7 +38,7 @@ export const tokensRouter: Router = (() => {
       params: TokensRequestParamsSchema,
       query: TokensRequestQuerySchema,
     },
-    responses: createApiResponse(TokensResponseDataSchema, 'Success', StatusCodes.OK),
+    responses: createApiResponse(TokensResponseSchema, 'Success', StatusCodes.OK),
   });
 
   router.get(

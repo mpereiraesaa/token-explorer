@@ -34,6 +34,6 @@ export const tokensRequestSchema = z.object({
   query: TokensRequestQuery,
 });
 
-export const tokensResponse = z.object({
+export const TokensResponse = z.object({
   tokens: z.array(TokensResponseData),
 });
