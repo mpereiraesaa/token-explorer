@@ -19,7 +19,7 @@ export const validateUser = async (jwt: string): Promise<void> => {
     const address = verify(jwt, JWT_SECRET) as string;
     const user = await accountRepository.findOne({ where: { address: address } });
     if (!user) {
-      throw new AuthError(ErrorCode.AuthError, 'Invalid JWT');
+      throw new Error('Invalid JWT');
     }
   } catch (err) {
     if (err instanceof Error) {
