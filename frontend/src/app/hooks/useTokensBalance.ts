@@ -6,7 +6,7 @@ import { useOnboardingStore } from '@/app/stores/onboarding';
 export interface TokenBalance {
   name: string;
   symbol: string;
-  address: string;
+  tokenAddress: string;
   balance: string;
   decimals: number;
 }

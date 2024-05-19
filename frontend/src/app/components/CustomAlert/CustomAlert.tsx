@@ -1,6 +1,6 @@
 'use client';
 import { Alert, AlertTitle, Slide } from '@mui/material';
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { SyntheticEvent } from 'react';
 import { CustomAlertContainer } from '.';
 import { useErrorStore } from '@/app/stores/error';
 

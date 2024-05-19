@@ -1,3 +1,4 @@
+import { formatUnits } from 'ethers';
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
@@ -34,12 +35,12 @@ export const ListContent = ({ tokens, isLoading }: TableContentProps) => {
     return (
         <TableBody>
             {tokens.map((tokenBalance) => (
-                <TableRow key={tokenBalance.address} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                <TableRow key={tokenBalance.tokenAddress} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                     <TableCell component="th" scope="row">
-                        {tokenBalance.name}
+                        {tokenBalance.name || 'Unknown'}
                     </TableCell>
-                    <TableCell align="right">{tokenBalance.symbol}</TableCell>
-                    <TableCell align="right">{tokenBalance.balance}</TableCell>
+                    <TableCell align="right">{tokenBalance.symbol || 'Unknown'}</TableCell>
+                    <TableCell align="right">{tokenBalance.balance && formatUnits(tokenBalance.balance, tokenBalance.decimals)}</TableCell>
                 </TableRow>
             ))}
         </TableBody>

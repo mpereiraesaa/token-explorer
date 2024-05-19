@@ -28,7 +28,7 @@ export const useErrorStore = createWithEqualityFn<ErrorState>(
     },
     closeNotification: () => {
       set({
-        active: false
+        active: false,
       });
     }
   }),
