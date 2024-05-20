@@ -6,7 +6,7 @@
 
 **Reasoning:**
 - **Security:** JWTs are a secure way to transmit information between parties because they can be signed, ensuring the integrity and authenticity of the data.
-- **Efficiency:** Validating tokens allows for stateless authentication, reducing the need for server-side sessions and improving scalability.
+- **Efficiency:** This eliminates the need to ask the user to sign the onboarding message repeatedly, thus helping to improve the user experience.
 
 ## 2. Setup Pagination
 **Description:**

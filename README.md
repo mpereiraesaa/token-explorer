@@ -59,7 +59,7 @@ Next, to load the frontend UI you can follow these steps:
 
 ### Step 2: ⚙️ Environment Configuration
 
-- Create an `.env.development` file in the root of the `frontend` directory with the following content:
+- An `.env.development` file is in the root of the `frontend` directory with the following content:
 
     ```env
     NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
