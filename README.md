@@ -4,6 +4,10 @@
 
 This is a web application that allows users to log in with an EVM wallet, fetches ERC20 tokens associated with their Ethereum address, and displays the tokens using the provided frontend. The application features include a secure login system, and an intuitive user interface. This project uses React with Next.js for the frontend and Node.js, Express, and TypeScript for the backend.
 
+### Development process
+
+To review the assumptions made during the development process and decisions made that lead to the final result, refer to the [Development process](./development-process.md) summary.
+
 ## Getting Started
 
 There are two main directories in this repository, each with a `README.md` file containing more information about their respective setup and usage:
