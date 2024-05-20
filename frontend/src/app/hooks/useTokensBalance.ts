@@ -21,7 +21,7 @@ export const useTokensBalance = (
   const { authenticated: isAuthenticated } = useOnboardingStore((state) => state);
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['tokens', pageKey, maxCount],
+    queryKey: ['tokens', pageKey, maxCount, isAuthenticated],
     queryFn: async () => {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
       let requestUrl = `${apiUrl}/${chain}/${TOKENS_ENDPOINT}/${address}`;
